@@ -2,11 +2,7 @@ window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFile
 window.BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
 window.URL = window.URL || window.webkitURL;
 
-if(!localStorage['image_base_url']){
-    
-    localStorage['image_base_url'] = "http://cms.everychina.com/";
-  
-}
+
 
  
 var image_spider={};
