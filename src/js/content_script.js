@@ -22,7 +22,7 @@ if(location.toString().indexOf('baidu.com')>-1){
         
     }
 }
-if(location.toString().indexOf('google.com')>-1){
+if(location.toString().indexOf('google.co')>-1){
     var links3=document.querySelectorAll('h3.r a');
     var links2=document.querySelectorAll('span.tl a');
     var links=[]
