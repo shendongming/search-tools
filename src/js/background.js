@@ -1,86 +1,82 @@
-window.requestFileSystem  = window.requestFileSystem || window.webkitRequestFileSystem;
+window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
 window.BlobBuilder = window.MozBlobBuilder || window.WebKitBlobBuilder || window.BlobBuilder;
 window.URL = window.URL || window.webkitURL;
 
 
+var image_spider = {};
 
- 
-var image_spider={};
- 
-  
- 
-image_spider.on_get_redirect_url=function(request, sender, sendResponse) {
 
-    
+image_spider.on_get_redirect_url = function (request, sender, sendResponse) {
+
+    console.log('test:',request.url)
     redirect_req.test(request.url);
-    redirect_req.add(request.url,function(url2){
-       
+    redirect_req.add(request.url, function (url2) {
+
         sendResponse({
-            'url':url2
+            'url': url2
         });
     })
 }
 
-var redirect_req={};
+var redirect_req = {};
 
-redirect_req.queue={};
-redirect_req.cache={};
-redirect_req.add=function(url,callback){
-    
-    if(redirect_req.cache[url]){
+redirect_req.queue = {};
+redirect_req.cache = {};
+redirect_req.add = function (url, callback) {
+
+    if (redirect_req.cache[url]) {
         callback(redirect_req.cache[url]);
         return;
     }
-    redirect_req.queue[url]=callback;
+    redirect_req.queue[url] = callback;
 }
 
-redirect_req.change=function(){
-    
-    }
-redirect_req.test=function(url){
-    
+redirect_req.change = function () {
+
+}
+redirect_req.test = function (url) {
+
     var client = new XMLHttpRequest();
     client.onreadystatechange = redirect_req.change;
     client.open("GET", url);
-    
+
     client.send();
 }
-redirect_req.ok=function(url,url2){
-   
-    if(redirect_req.queue[url] ){
-   
+redirect_req.ok = function (url, url2) {
+
+    if (redirect_req.queue[url]) {
+
         redirect_req.queue[url](url2);
         delete redirect_req.queue[url];
     }
-    redirect_req.cache[url]=url2;
+    redirect_req.cache[url] = url2;
 }
 
 
 //接受请求的分发器
-image_spider.onRequest=function(request, sender, sendResponse) {
-    
-    var fun='on_'+request.action;
-   
-    if(image_spider[fun]){
+image_spider.onRequest = function (request, sender, sendResponse) {
+
+    var fun = 'on_' + request.action;
+
+    if (image_spider[fun]) {
 
         return image_spider[fun](request, sender, sendResponse);
     }
-    console.error('error '+fun);    
+    console.error('error ' + fun);
 }
 
- 
-   
-  
+
 chrome.webRequest.onBeforeRedirect.addListener(
-    function(details) {
-        redirect_req.ok(details.url,details.redirectUrl);
+    function (details) {
+        console.log('ok',details.url, details.redirectUrl)
+        redirect_req.ok(details.url, details.redirectUrl);
     },
     {
-        urls: ["http://www.baidu.com/link*"]
+        urls: ["https://www.baidu.com/*","http://www.baidu.com/*"]
     },
     ["responseHeaders"]
-    );
- 
+);
+
 
 chrome.extension.onRequest.addListener(image_spider.onRequest);
 

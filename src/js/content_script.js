@@ -1,6 +1,7 @@
 
 if(location.toString().indexOf('baidu.com')>-1){
     var links=document.querySelectorAll('h3.t a');
+    console.log('baidu',links.length)
     for(var i =0;i<links.length;i++){
         var a=links[i];
         (function(a){
