@@ -1,4 +1,5 @@
 /src.pem
+.idea/
 ### Vim template
 [._]*.s[a-w][a-z]
 [._]s[a-w][a-z]
